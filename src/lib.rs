@@ -1,14 +1,6 @@
-use zed_extension_api as zed;
+use zed_extension_api::register_extension;
 
-struct MyExtension;
+mod extension;
+use extension::MyExtension;
 
-impl zed::Extension for MyExtension {
-    fn new() -> Self
-    where
-        Self: Sized,
-    {
-        MyExtension {}
-    }
-}
-
-zed::register_extension!(MyExtension);
+register_extension!(MyExtension);
