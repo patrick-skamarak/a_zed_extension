@@ -1,4 +1,4 @@
-use zed_extension_api::{self as zed, register_extension};
+use zed_extension_api as zed;
 
 struct MyExtension;
 
@@ -11,4 +11,4 @@ impl zed::Extension for MyExtension {
     }
 }
 
-register_extension!(MyExtension);
+zed::register_extension!(MyExtension);
