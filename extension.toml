@@ -5,3 +5,7 @@ schema_version = 1
 authors = ["Your Name <you@example.com>"]
 description = "My cool extension"
 repository = "https://github.com/your-name/my-zed-extension"
+
+[language_servers.apex-jorje-lsp]
+name = "Apex Jorje LSP"
+language = "Apex"

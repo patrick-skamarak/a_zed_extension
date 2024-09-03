@@ -1,0 +1,3 @@
+name = "Apex"
+path_suffixes = ["cls", "apex", "!*"]
+line_comments = ["//"]
