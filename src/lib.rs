@@ -1,7 +1,7 @@
 mod constants;
 mod settings;
 
-use constants::LANGUAGE_SERVER_ID;
+use constants::{JAVA_FIRST_ARG, LANGUAGE_SERVER_MAIN, LSP_JAR_PATH};
 use zed_extension_api as zed;
 
 struct ApexExtension;
@@ -15,22 +15,17 @@ impl zed::Extension for ApexExtension {
     }
     fn language_server_command(
         &mut self,
-        _language_server_id: &zed::LanguageServerId,
+        language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> zed::Result<zed::Command> {
-        let lsp_path = concat!(env!("CARGO_MANIFEST_DIR"), "/src/bin/lsp/");
+        let extension_settings = settings::ExtensionSettings::new(worktree, language_server_id);
+        let mut args: Vec<String> = Vec::new();
+        args.push(String::from(JAVA_FIRST_ARG));
+        args.push(String::from(LSP_JAR_PATH));
+        args.push(String::from(LANGUAGE_SERVER_MAIN));
         zed::Result::Ok(zed::Command {
-            command: "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java"
-                .to_string(),
-            args: vec![
-                "-jar".to_string(),
-                format!(
-                    "{}{}{}",
-                    lsp_path,
-                    LANGUAGE_SERVER_ID.to_string(),
-                    ".jar".to_string()
-                ),
-            ],
+            command: extension_settings.get_java_path().unwrap(),
+            args,
             env: worktree.shell_env(),
         })
     }
