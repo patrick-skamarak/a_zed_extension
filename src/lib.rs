@@ -19,6 +19,7 @@ impl zed::Extension for ApexExtension {
         worktree: &zed::Worktree,
     ) -> zed::Result<zed::Command> {
         let extension_settings = settings::ExtensionSettings::new(worktree, language_server_id);
+        println!("{:?}", extension_settings.get_lsp_settings());
         let mut args: Vec<String> = Vec::new();
         args.push(String::from(JAVA_FIRST_ARG));
         args.push(String::from(LSP_JAR_PATH));

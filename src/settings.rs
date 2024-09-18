@@ -1,13 +1,15 @@
-use std::error::Error;
-
 use crate::constants;
-use zed_extension_api::{LanguageServerId, Worktree};
+use zed_extension_api::{
+    serde_json::Value,
+    settings::{self, LanguageSettings, LspSettings},
+    LanguageServerId, Worktree,
+};
 
 mod java;
 
 pub struct ExtensionSettings<'a> {
-    pub worktree: &'a Worktree,
-    pub language_server_id: &'a LanguageServerId,
+    worktree: &'a Worktree,
+    language_server_id: &'a LanguageServerId,
 }
 
 impl<'a> ExtensionSettings<'a> {
@@ -17,18 +19,10 @@ impl<'a> ExtensionSettings<'a> {
             language_server_id,
         }
     }
-    pub fn get_lsp_settings(&self) -> Result<zed_extension_api::settings::LspSettings, String> {
-        zed_extension_api::settings::LspSettings::for_worktree(
-            &constants::LANGUAGE_SERVER_NAME,
-            self.worktree,
-        )
+    pub fn get_lsp_settings(&self) -> Result<LspSettings, String> {
+        LspSettings::for_worktree(&constants::LANGUAGE_SERVER_NAME, self.worktree)
     }
-    pub fn get_language_settings(
-        &self,
-    ) -> Result<zed_extension_api::settings::LanguageSettings, String> {
-        zed_extension_api::settings::LanguageSettings::for_worktree(
-            Some(constants::LANGUAGE_NAME),
-            &self.worktree,
-        )
+    pub fn get_language_settings(&self) -> Result<LanguageSettings, String> {
+        LanguageSettings::for_worktree(Some(&constants::LANGUAGE_NAME), self.worktree)
     }
 }
