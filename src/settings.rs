@@ -1,7 +1,6 @@
 use crate::constants;
 use zed_extension_api::{
-    serde_json::Value,
-    settings::{self, LanguageSettings, LspSettings},
+    settings::{LanguageSettings, LspSettings},
     LanguageServerId, Worktree,
 };
 
@@ -10,6 +9,11 @@ mod java;
 pub struct ExtensionSettings<'a> {
     worktree: &'a Worktree,
     language_server_id: &'a LanguageServerId,
+}
+
+pub struct Breadcrumb<T>(T);
+enum Idk<T> {
+    One(T),
 }
 
 impl<'a> ExtensionSettings<'a> {
