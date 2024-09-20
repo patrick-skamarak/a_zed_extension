@@ -11,10 +11,14 @@ pub struct ExtensionSettings<'a> {
     language_server_id: &'a LanguageServerId,
 }
 
-pub struct Breadcrumb<T>(T);
-enum Idk<T> {
-    One(T),
+trait Breadcrumb<Next = Self> {
+    type Next;
+    fn next(self) -> Next;
 }
+
+struct Something;
+
+impl Breadcrumb for Something {}
 
 impl<'a> ExtensionSettings<'a> {
     pub fn new(worktree: &'a Worktree, language_server_id: &'a LanguageServerId) -> Self {
