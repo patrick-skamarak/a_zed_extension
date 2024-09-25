@@ -2,7 +2,7 @@ mod constants;
 mod settings;
 
 use constants::{JAVA_FIRST_ARG, JAVA_MAIN, LSP_JAR_PATH};
-use zed_extension_api as zed;
+use zed_extension_api::{self as zed, LanguageServerId};
 
 struct ApexExtension;
 
@@ -18,10 +18,15 @@ impl zed::Extension for ApexExtension {
         language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> zed::Result<zed::Command> {
-        let extension_settings = settings::ExtensionSettings::new(worktree, language_server_id);
-        println!("{:?}", extension_settings.get_lsp_settings());
-        println!("{:?}", extension_settings.get_language_settings());
-        println!("{:?}", language_server_id);
+        if (language_server_id.as_ref() != constants::LANGUAGE_SERVER_NAME) {
+            return zed::Result::Err(String::from("boop"));
+        }
+        let extension_settings = settings::ExtensionSettings::new(
+            worktree,
+            language_server_id,
+            constants::LANGUAGE_SERVER_NAME,
+            constants::LANGUAGE_NAME,
+        );
         let mut args: Vec<String> = Vec::new();
         args.push(String::from(JAVA_FIRST_ARG));
         args.push(String::from(LSP_JAR_PATH));

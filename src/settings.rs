@@ -1,36 +1,31 @@
-use crate::constants;
-use zed_extension_api::{
-    settings::{LanguageSettings, LspSettings},
-    LanguageServerId, Worktree,
-};
+use zed_extension_api::{LanguageServerId, Worktree};
 
 mod java;
+
+trait Getter<T> {
+    type Output;
+    fn get(&self, _: T) -> Self::Output;
+}
 
 pub struct ExtensionSettings<'a> {
     worktree: &'a Worktree,
     language_server_id: &'a LanguageServerId,
+    language_server_name: &'a str,
+    language_name: &'a str,
 }
-
-trait Breadcrumb<Next = Self> {
-    type Next;
-    fn next(self) -> Next;
-}
-
-struct Something;
-
-impl Breadcrumb for Something {}
 
 impl<'a> ExtensionSettings<'a> {
-    pub fn new(worktree: &'a Worktree, language_server_id: &'a LanguageServerId) -> Self {
+    pub fn new(
+        worktree: &'a Worktree,
+        language_server_id: &'a LanguageServerId,
+        language_server_name: &'a str,
+        language_name: &'a str,
+    ) -> Self {
         ExtensionSettings {
             worktree,
             language_server_id,
+            language_server_name,
+            language_name,
         }
-    }
-    pub fn get_lsp_settings(&self) -> Result<LspSettings, String> {
-        LspSettings::for_worktree(&constants::LANGUAGE_SERVER_NAME, self.worktree)
-    }
-    pub fn get_language_settings(&self) -> Result<LanguageSettings, String> {
-        LanguageSettings::for_worktree(Some(&constants::LANGUAGE_NAME), self.worktree)
     }
 }

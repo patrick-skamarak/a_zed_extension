@@ -12,16 +12,6 @@ pub static REGEX: LazyLock<Regex> = LazyLock::new(|| {
 
 impl<'a> ExtensionSettings<'a> {
     pub fn get_java_path(&self) -> Option<String> {
-        let _ = self
-            .get_lsp_settings()
-            .unwrap()
-            .settings
-            .unwrap()
-            .as_object()
-            .unwrap()
-            .get(JAVA_ABSOLUTE_PATH_TAG)
-            .unwrap()
-            .as_str();
         Some(String::from(
             "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java",
         ))
