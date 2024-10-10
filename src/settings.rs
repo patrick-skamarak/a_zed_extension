@@ -1,4 +1,8 @@
-use zed_extension_api::{LanguageServerId, Worktree};
+use zed_extension_api::{
+    serde_json::{Map, Value},
+    settings::{LanguageSettings, LspSettings},
+    LanguageServerId, Worktree,
+};
 
 mod java;
 
@@ -12,6 +16,19 @@ pub struct ExtensionSettings<'a> {
     language_server_id: &'a LanguageServerId,
     language_server_name: &'a str,
     language_name: &'a str,
+}
+
+pub fn get_value(
+    json_object: Map<String, Value>,
+    list: Vec<&str>,
+) -> Result<Option<Value>, String> {
+    if (list.len() == 0) {
+        return Result::Ok(Option::None);
+    }
+    if (list.len() == 1) {
+        return json_object;
+    }
+    todo!()
 }
 
 impl<'a> ExtensionSettings<'a> {
