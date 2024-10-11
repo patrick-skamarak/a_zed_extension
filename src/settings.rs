@@ -1,15 +1,12 @@
+use std::ops::Deref;
+
 use zed_extension_api::{
     serde_json::{Map, Value},
-    settings::{LanguageSettings, LspSettings},
+    settings::LspSettings,
     LanguageServerId, Worktree,
 };
 
 mod java;
-
-trait Getter<T> {
-    type Output;
-    fn get(&self, _: T) -> Self::Output;
-}
 
 pub struct ExtensionSettings<'a> {
     worktree: &'a Worktree,
@@ -18,18 +15,29 @@ pub struct ExtensionSettings<'a> {
     language_name: &'a str,
 }
 
-pub fn get_value(
-    json_object: Map<String, Value>,
-    list: Vec<&str>,
-) -> Result<Option<Value>, String> {
-    if (list.len() == 0) {
-        return Result::Ok(Option::None);
+struct Wrapper<T>(T);
+
+impl Deref for Wrapper<LspSettings> {
+    type Target = LspSettings;
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
-    if (list.len() == 1) {
-        return json_object;
-    }
-    todo!()
 }
+
+impl Wrapper<LspSettings> {}
+
+// pub fn get_value(
+//     json_object: Map<String, Value>,
+//     list: Vec<&str>,
+// ) -> Result<Option<Value>, String> {
+//     if (list.len() == 0) {
+//         return Result::Ok(Option::None);
+//     }
+//     if (list.len() == 1) {
+//         return json_object;
+//     }
+//     todo!()
+// }
 
 impl<'a> ExtensionSettings<'a> {
     pub fn new(
@@ -38,6 +46,11 @@ impl<'a> ExtensionSettings<'a> {
         language_server_name: &'a str,
         language_name: &'a str,
     ) -> Self {
+        Wrapper(
+            zed_extension_api::settings::LspSettings::for_worktree(language_server_name, worktree)
+                .unwrap(),
+        )
+        .test();
         ExtensionSettings {
             worktree,
             language_server_id,
