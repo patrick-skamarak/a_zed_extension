@@ -1,61 +1,37 @@
-use std::ops::Deref;
-
-use zed_extension_api::{
-    serde_json::{Map, Value},
-    settings::LspSettings,
-    LanguageServerId, Worktree,
-};
-
+use constcat::concat_slices;
+use zed_extension_api::serde_json::Value;
 mod java;
 
-pub struct ExtensionSettings<'a> {
-    worktree: &'a Worktree,
-    language_server_id: &'a LanguageServerId,
-    language_server_name: &'a str,
-    language_name: &'a str,
-}
+const WHAT: &'static str = "Hey";
+const IDK: &[&'static str] = &[WHAT, "HI"];
+const CONCAT: &[&str] = concat_slices!([&str]:IDK, &["HIIIII"]);
 
 struct Wrapper<T>(T);
 
-impl Deref for Wrapper<LspSettings> {
-    type Target = LspSettings;
-    fn deref(&self) -> &Self::Target {
-        &self.0
+impl Wrapper<Value> {
+    pub fn get(&self, json_tag_list: &[&str]) -> Result<Option<Value>, &str> {
+        return self.recursive_get(&mut json_tag_list.into_iter());
+    }
+    fn recursive_get<'a, T: Iterator<Item = &'a &'a str>>(
+        &self,
+        json_tag_iterator: &mut T,
+    ) -> Result<Option<Value>, &str> {
+        println!("{:?}", json_tag_iterator.next());
+        todo!()
     }
 }
 
-impl Wrapper<LspSettings> {}
+#[cfg(test)]
+mod tests {
+    use zed_extension_api::serde_json::Number;
 
-// pub fn get_value(
-//     json_object: Map<String, Value>,
-//     list: Vec<&str>,
-// ) -> Result<Option<Value>, String> {
-//     if (list.len() == 0) {
-//         return Result::Ok(Option::None);
-//     }
-//     if (list.len() == 1) {
-//         return json_object;
-//     }
-//     todo!()
-// }
+    use super::*;
 
-impl<'a> ExtensionSettings<'a> {
-    pub fn new(
-        worktree: &'a Worktree,
-        language_server_id: &'a LanguageServerId,
-        language_server_name: &'a str,
-        language_name: &'a str,
-    ) -> Self {
-        Wrapper(
-            zed_extension_api::settings::LspSettings::for_worktree(language_server_name, worktree)
-                .unwrap(),
-        )
-        .test();
-        ExtensionSettings {
-            worktree,
-            language_server_id,
-            language_server_name,
-            language_name,
-        }
+    #[test]
+    fn test_name() {
+        let something = ["a", "b", "c", "d"];
+        println!("{:?}", CONCAT);
+        let a_value = Value::Number(Number::from(12));
+        _ = Wrapper(a_value).get(&something);
     }
 }

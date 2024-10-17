@@ -1,4 +1,4 @@
-use super::ExtensionSettings;
+// use super::ExtensionSettings;
 use regex::Regex;
 use std::io::Error;
 use std::process::Command;
@@ -10,13 +10,13 @@ pub static REGEX: LazyLock<Regex> = LazyLock::new(|| {
         .expect("Failed to compile regex pattern. Aborting.")
 });
 
-impl<'a> ExtensionSettings<'a> {
-    pub fn get_java_path(&self) -> Option<String> {
-        Some(String::from(
-            "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java",
-        ))
-    }
-}
+// impl<'a> ExtensionSettings<'a> {
+//     pub fn get_java_path(&self) -> Option<String> {
+//         Some(String::from(
+//             "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java",
+//         ))
+//     }
+// }
 
 fn get_java_properties(command: String) -> Result<String, Error> {
     match Command::new(command)

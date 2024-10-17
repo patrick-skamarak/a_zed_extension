@@ -8,3 +8,5 @@ pub static LSP_JAR_PATH: &'static str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/src/bin/lsp/apex-jorje-lsp.jar",
 );
+
+pub static IDK: &[&'static str] = &["HI"];
